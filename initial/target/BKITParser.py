@@ -11,10 +11,9 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\13")
-        buf.write("\13\4\2\t\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\2\2\3\2\2\2\2")
-        buf.write("\t\2\4\3\2\2\2\4\5\7\6\2\2\5\6\7\5\2\2\6\7\7\3\2\2\7\b")
-        buf.write("\7\4\2\2\b\t\7\2\2\3\t\3\3\2\2\2\2")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3C")
+        buf.write("\7\4\2\t\2\3\2\3\2\3\2\2\2\3\2\2\2\2\5\2\4\3\2\2\2\4\5")
+        buf.write("\3\2\2\2\5\3\3\2\2\2\2")
         return buf.getvalue()
 
 
@@ -28,25 +27,101 @@ class BKITParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "<INVALID>", "';'", "':'", "'Var'" ]
+    literalNames = [ "<INVALID>", "';'", "','", "':'", "'.'", "'('", "')'", 
+                     "<INVALID>", "'Body'", "'Else'", "'EndFor'", "'If'", 
+                     "'Var'", "'EndDo'", "'Break'", "'ElseIf'", "'EndWhile'", 
+                     "'Parameter'", "'While'", "'Continue'", "'EndBody'", 
+                     "'For'", "'Return'", "'True'", "'Do'", "'EndIf'", "'Function'", 
+                     "'Then'", "'False'", "'+'", "'+.'", "'-'", "'-.'", 
+                     "'*'", "'*.'", "'\\'", "'\\.'", "'%'", "'!'", "'&&'", 
+                     "'||'", "'=='", "'!='", "'>'", "'<'", "'<='", "'>='", 
+                     "'=/='", "'>.'", "'<.'", "'<=.'", "'>=.'", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "'\n'" ]
 
-    symbolicNames = [ "<INVALID>", "ID", "SEMI", "COLON", "VAR", "WS", "ERROR_CHAR", 
-                      "UNCLOSE_STRING", "ILLEGAL_ESCAPE", "UNTERMINATED_COMMENT" ]
+    symbolicNames = [ "<INVALID>", "SEMI", "COMMA", "COLON", "DOT", "LP", 
+                      "RP", "ID", "BODY", "ELSE", "ENDFOR", "IF", "VAR", 
+                      "ENDDO", "BREAK", "ELSEIF", "ENDWHILE", "PARAMETER", 
+                      "WHILE", "CONTINUE", "ENDBODY", "FOR", "RETURN", "TRUE", 
+                      "DO", "ENDIF", "FUNCTION", "THEN", "FALSE", "ADD", 
+                      "ADDDOT", "SUB", "SUBDOT", "MUL", "MULDOT", "DIV", 
+                      "DIVDOT", "MOD", "NEG", "AND", "OR", "EQ", "NEI", 
+                      "GT", "LT", "LTE", "GTE", "NEF", "GTDOT", "LTDOT", 
+                      "LTEDOT", "GTEDOT", "SEPERATOR", "LITERAL", "INTEGER", 
+                      "FLOAT", "BOOLEAN", "STRING", "ARRAY", "WS", "NEW_LINE", 
+                      "BLOCK_COMMENT", "ERROR_CHAR", "UNCLOSE_STRING", "ILLEGAL_ESCAPE", 
+                      "UNTERMINATED_COMMENT" ]
 
     RULE_program = 0
 
     ruleNames =  [ "program" ]
 
     EOF = Token.EOF
-    ID=1
-    SEMI=2
+    SEMI=1
+    COMMA=2
     COLON=3
-    VAR=4
-    WS=5
-    ERROR_CHAR=6
-    UNCLOSE_STRING=7
-    ILLEGAL_ESCAPE=8
-    UNTERMINATED_COMMENT=9
+    DOT=4
+    LP=5
+    RP=6
+    ID=7
+    BODY=8
+    ELSE=9
+    ENDFOR=10
+    IF=11
+    VAR=12
+    ENDDO=13
+    BREAK=14
+    ELSEIF=15
+    ENDWHILE=16
+    PARAMETER=17
+    WHILE=18
+    CONTINUE=19
+    ENDBODY=20
+    FOR=21
+    RETURN=22
+    TRUE=23
+    DO=24
+    ENDIF=25
+    FUNCTION=26
+    THEN=27
+    FALSE=28
+    ADD=29
+    ADDDOT=30
+    SUB=31
+    SUBDOT=32
+    MUL=33
+    MULDOT=34
+    DIV=35
+    DIVDOT=36
+    MOD=37
+    NEG=38
+    AND=39
+    OR=40
+    EQ=41
+    NEI=42
+    GT=43
+    LT=44
+    LTE=45
+    GTE=46
+    NEF=47
+    GTDOT=48
+    LTDOT=49
+    LTEDOT=50
+    GTEDOT=51
+    SEPERATOR=52
+    LITERAL=53
+    INTEGER=54
+    FLOAT=55
+    BOOLEAN=56
+    STRING=57
+    ARRAY=58
+    WS=59
+    NEW_LINE=60
+    BLOCK_COMMENT=61
+    ERROR_CHAR=62
+    UNCLOSE_STRING=63
+    ILLEGAL_ESCAPE=64
+    UNTERMINATED_COMMENT=65
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -63,20 +138,6 @@ class BKITParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def VAR(self):
-            return self.getToken(BKITParser.VAR, 0)
-
-        def COLON(self):
-            return self.getToken(BKITParser.COLON, 0)
-
-        def ID(self):
-            return self.getToken(BKITParser.ID, 0)
-
-        def SEMI(self):
-            return self.getToken(BKITParser.SEMI, 0)
-
-        def EOF(self):
-            return self.getToken(BKITParser.EOF, 0)
 
         def getRuleIndex(self):
             return BKITParser.RULE_program
@@ -96,16 +157,7 @@ class BKITParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_program)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 2
-            self.match(BKITParser.VAR)
-            self.state = 3
-            self.match(BKITParser.COLON)
-            self.state = 4
-            self.match(BKITParser.ID)
-            self.state = 5
-            self.match(BKITParser.SEMI)
-            self.state = 6
-            self.match(BKITParser.EOF)
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
