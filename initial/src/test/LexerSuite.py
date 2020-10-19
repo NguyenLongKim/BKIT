@@ -2,7 +2,7 @@ import unittest
 from TestUtils import TestLexer
 
 class LexerSuite(unittest.TestCase):
-      
+    ''' 
     def test_lower_identifier(self):
         """test identifiers"""
         self.assertTrue(TestLexer.checkLexeme("abc","abc,<EOF>",101))
@@ -28,4 +28,10 @@ class LexerSuite(unittest.TestCase):
     def test_normal_string_with_escape(self):
         """test normal string with escape"""
         self.assertTrue(TestLexer.checkLexeme(""" "ab'"c\\n def"  ""","""ab'"c\\n def,<EOF>""",107))
+    '''
 
+    def test_block_commment(self):
+        #self.assertTrue(TestLexer.checkLexeme('""abc12z\'\]""""\[\[\]''""','""abc12z\'\]"",""\[\[\]''"",<EOF>',101))
+        #self.assertTrue(TestLexer.checkLexeme("\"\'\"abcd\'\"\\\'\"","\"abcd\"\',<EOF>",101))
+        #self.assertTrue(TestLexer.checkLexeme("{{1,2},{3,4},{5,6}}",",<EOF>",101))
+        self.assertTrue(TestLexer.checkLexeme("\"True\"","<EOF>",101))
