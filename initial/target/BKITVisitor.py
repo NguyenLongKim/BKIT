@@ -64,8 +64,18 @@ class BKITVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by BKITParser#int_type.
+    def visitInt_type(self, ctx:BKITParser.Int_typeContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by BKITParser#int_expr.
     def visitInt_expr(self, ctx:BKITParser.Int_exprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BKITParser#float_type.
+    def visitFloat_type(self, ctx:BKITParser.Float_typeContext):
         return self.visitChildren(ctx)
 
 
@@ -79,6 +89,11 @@ class BKITVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by BKITParser#bool_type.
+    def visitBool_type(self, ctx:BKITParser.Bool_typeContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by BKITParser#bool_expr.
     def visitBool_expr(self, ctx:BKITParser.Bool_exprContext):
         return self.visitChildren(ctx)
@@ -89,8 +104,8 @@ class BKITVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKITParser#index_operators.
-    def visitIndex_operators(self, ctx:BKITParser.Index_operatorsContext):
+    # Visit a parse tree produced by BKITParser#string_type.
+    def visitString_type(self, ctx:BKITParser.String_typeContext):
         return self.visitChildren(ctx)
 
 
@@ -211,6 +226,11 @@ class BKITVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by BKITParser#params_func_call.
     def visitParams_func_call(self, ctx:BKITParser.Params_func_callContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BKITParser#built_in_func.
+    def visitBuilt_in_func(self, ctx:BKITParser.Built_in_funcContext):
         return self.visitChildren(ctx)
 
 

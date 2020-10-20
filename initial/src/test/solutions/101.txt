@@ -1,1 +1,1 @@
-Var,:,a,=,1,,,b,=,2.0,,,c,=,True,,,d,=,String,,,f,[,1,],[,2,],;,Var,:,g,[,2,],[,3,],=,{{2,3,4},{4,5,6}},;,Function,:,fact,Parameter,:,n,Body,:,If,n,==,0,Then,Return,1,;,Else,Return,n,*,fact,(,n,-,1,),;,EndIf,.,EndBody,.,Function,:,main,Body,:,x,=,10,;,fact,(,x,),;,EndBody,.,<EOF>
+abc,<EOF>

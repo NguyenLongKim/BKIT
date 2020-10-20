@@ -41,7 +41,7 @@ func_declare: FUNCTION COLON ID (PARAMETER COLON params_list)? BODY COLON stms_l
 params_list: (ID|ID dimension+)(','(ID|ID dimension+))*;
 stms_list: (var_delcare_stm)*(asm_stm|break_stm|call_stm|coninue_stm|do_while_stm|for_stm|if_stm|while_stm|return_stm)*;
 
-expr: int_expr|float_expr|bool_expr|element_expr|relational_expr;
+expr: int_expr|float_expr|bool_expr|element_expr|relational_expr|string_type;
 
 int_type
     : ID
@@ -49,7 +49,7 @@ int_type
     | int_of_float
     | int_of_string
     | func_call
-    | int_expr;
+    | element_expr;
 
 int_expr
     : LP int_expr RP
@@ -63,9 +63,9 @@ float_type
     : ID
     | FLOAT
     | float_of_int
-    | float_of_int
+    | float_of_string
     | func_call
-    | float_expr;
+    | element_expr;
 
 float_expr
     : LP float_expr RP
@@ -85,7 +85,7 @@ bool_type
     | bool_of_string
     | func_call
     | relational_expr
-    | bool_expr;
+    | element_expr;
 
 bool_expr
     : LP bool_expr RP
@@ -93,10 +93,7 @@ bool_expr
     | bool_expr (AND|OR) bool_expr
     | bool_type;
 
-element_expr: (ID|func_call) index_operators ;
-
-index_operators
-    : '[' int_expr ']' (index_operators)*;
+element_expr: (ID|func_call) (LSB (int_expr)+ RSB)+;
 
 string_type
     : ID
@@ -104,16 +101,28 @@ string_type
     | string_of_bool
     | string_of_float
     | string_of_int
-    | func_call;
+    | func_call
+    | read_func
+    | element_expr;
 
-int_of_float: 'int_of_float' LP (float_type) RP;
-float_of_int: 'float_of_int' LP (int_type) RP;
-int_of_string: 'int_of_string' LP (string_type) RP;
-string_of_int: 'string_of_int' LP (int_type) RP;
-float_of_string: 'float_of_string' LP (string_type) RP;
-string_of_float: 'string_of_float' LP (float_type) RP;
-bool_of_string: 'bool_of_string' LP (string_type) RP;
-string_of_bool: 'string_of_bool' LP (bool_type) RP;
+int_of_float: INT_OF_FLOAT LP float_expr RP;
+float_of_int: FLOAT_OF_INT LP int_expr RP;
+int_of_string: INT_OF_STRING LP string_type  RP;
+string_of_int: STRING_OF_INT LP int_expr RP;
+float_of_string: FLOAT_OF_STRING LP string_type RP;
+string_of_float: STRING_OF_FLOAT LP float_expr RP;
+bool_of_string: BOOL_OF_STRING LP string_type RP;
+string_of_bool: STRING_OF_BOOL LP bool_expr RP;
+
+INT_OF_FLOAT: 'int_of_float';
+INT_OF_STRING: 'int_of_string';
+FLOAT_OF_INT: 'float_of_int';
+FLOAT_OF_STRING: 'float_of_string';
+STRING_OF_INT: 'string_of_int';
+STRING_OF_FLOAT: 'string_of_float';
+STRING_OF_BOOL: 'string_of_bool';
+BOOL_OF_STRING: 'bool_of_string';
+
 
 type_coercion_func
     : int_of_float
@@ -129,7 +138,7 @@ var_delcare_stm: var_declare ;
 
 asm_stm: ID '=' expr SEMI;
 
-if_stm: IF bool_expr THEN stms_list (ELSEIF bool_expr THEN stms_list)* (ELSE stms_list)? ENDIF DOT ;
+if_stm: IF bool_expr THEN stms_list (ELSEIF bool_expr THEN stms_list)* (ELSE stms_list)? ENDIF DOT;
 
 for_stm: FOR LP scalar_var '=' initExpr COMMA conditionExpr COMMA updateExpr RP DO stms_list ENDFOR;
 initExpr: int_expr;
@@ -148,13 +157,27 @@ call_stm: func_call SEMI ;
 
 return_stm: RETURN expr SEMI ;
 
-func_call: ID LP params_func_call? RP;
+func_call
+    : ID LP params_func_call? RP
+    | type_coercion_func
+    | built_in_func;
 params_func_call: (expr)(','expr)* ;
 
-printLn_func: 'printLn' LP RP;
-print_func: 'print' LP (string_type) RP;
-printStrLn_func: 'printStrLn' LP (string_type) RP;
-read_func: 'read' LP RP; 
+built_in_func
+    : print_func
+    | printLn_func
+    | printStrLn_func
+    | read_func;
+
+printLn_func: PRINTLN LP RP;
+print_func:  PRINT LP string_type RP;
+printStrLn_func: PRINTSTRLN LP string_type RP;
+read_func: READ LP RP; 
+
+PRINTLN: 'printLn';
+PRINT: 'print';
+PRINTSTRLN: 'printStrLn';
+READ: 'read';
 
 /*****************
 Lexer Declaration 
@@ -165,11 +188,15 @@ SEMI: ';';
 COMMA: ',';
 COLON: ':';
 DOT: '.';
-LP: '(';
-RP: ')';
+LP: '('; // Left Parenthesis
+RP: ')'; // Right Parenthesis
+LCB: '{'; // Left Curly Bracket
+RCB: '}'; // Right Curly Bracket
+LSB: '['; // Left Square Bracket
+RSB: ']'; // Right Square Bracket
 
 /* Identifier*/
-ID: [a-z]+[A-Za-z'_'0-9]* ;
+ID: [a-z][a-zA-Z'_'0-9]* ;
 
 /* Keywords */
 BODY: 'Body';
@@ -222,7 +249,7 @@ GTEDOT: '>=.';
 /* Literals */
 INTEGER: '0'|[1-9]+[0-9]*|('0x'|'0X')[0-9A-F]*|('0o'|'0O')[0-7]*;
 
-FLOAT: [0-9]+'.'(([0-9]+[Ee]('+'|'-')?[0-9]+)|([0-9]+)|([Ee]('+'|'-')?[0-9]+)) ;
+FLOAT: [0-9]+'.'(([0-9]+[Ee]('+'|'-')?[0-9]+)|([0-9]+)|([Ee]('+'|'-')?[0-9]+))*;
 
 fragment STR_CHAR: ~[\b\f\r\n\t"'\\] | ESC_SEQ | '\'"';
 fragment ESC_SEQ: '\\'[bftnr'\\] ;

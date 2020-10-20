@@ -5,15 +5,24 @@ Function: fact
     Parameter: n
     Body:
         Var: temp=True;
-        If 3!=5+2 || !True || 3.e12 >. 12.0 Then
+        n = string_of_float(float_of_string("2.0"));
+        If 2 != 5+2 Then
             Return 1;
+        ElseIf 3 > 2 Then
+            v = 4. \. 3.;
+            k = a[12+b[2][2]];
         Else
+            a = int_of_string(read());
+            int_of_string(read());
+            read();
             Return n * fact (n - 1);
         EndIf.
     EndBody.
 
 Function: main
     Body:
-        x = 10;
-        fact (x);
+        Var: x;
+        If True Then
+            Var: y;
+        EndIf.
     EndBody.
