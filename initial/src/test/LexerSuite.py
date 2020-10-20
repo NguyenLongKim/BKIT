@@ -34,4 +34,6 @@ class LexerSuite(unittest.TestCase):
         #self.assertTrue(TestLexer.checkLexeme('""abc12z\'\]""""\[\[\]''""','""abc12z\'\]"",""\[\[\]''"",<EOF>',101))
         #self.assertTrue(TestLexer.checkLexeme("\"\'\"abcd\'\"\\\'\"","\"abcd\"\',<EOF>",101))
         #self.assertTrue(TestLexer.checkLexeme("{{1,2},{3,4},{5,6}}",",<EOF>",101))
-        self.assertTrue(TestLexer.checkLexeme("\"True\"","<EOF>",101))
+        f = open('E:\\Principle of Programming Language\\assignment1\\initial\\src\\test\\test.txt','r')
+        input = f.read()
+        self.assertTrue(TestLexer.checkLexeme(input,"<EOF>",101))
